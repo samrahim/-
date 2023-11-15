@@ -1,20 +1,20 @@
 package main
 
 import (
-	"learn/routes"
+	"learn/controllers"
+	"learn/database"
+	"learn/verificetion"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
+	database.GetDb()
 	app := fiber.New()
-	setAppRoutes(app)
+	app.Post("/signup", controllers.SignUp)
+	app.Post("/login", controllers.Login)
+	app.Get("/users", verificetion.Verification, func(c *fiber.Ctx) error {
+		return c.Status(200).JSON("helllo")
+	})
 	app.Listen(":8000")
-}
-
-func setAppRoutes(app *fiber.App) {
-	app.Get("/products", routes.FindAll)
-	app.Post("/product", routes.CreateProduct)
-	app.Get("/products/:status", routes.GetByStatus)
-	app.Get("/products/:min/:max", routes.FindAllByPrices)
 }
